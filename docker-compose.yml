@@ -1,0 +1,27 @@
+version: '3.9'
+
+services:
+  todo-app:
+    container_name: todo-app
+    build: .
+    restart: always
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      POSTGRES_HOST: todo_db
+      POSTGRES_PORT: 5432
+
+  db:
+    container_name: todo_db
+    restart: always
+    image: postgres:latest
+    volumes:
+      - ./.database/postgres/data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: mypass
+      POSTGRES_DB: test
+      POSTGRES_SSLMODE: disable
+    ports:
+      - "5428:5432"
