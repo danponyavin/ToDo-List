@@ -53,3 +53,13 @@ func (t *TodoService) UpdateTask(id int, inp models.CreateTaskReq) (models.Task,
 
 	return task, nil
 }
+
+func (t *TodoService) DeleteTask(id int) error {
+	err := t.storage.DeleteTask(id)
+	if err != nil {
+		log.Println("Service. DeleteTask:", err)
+		return err
+	}
+
+	return nil
+}

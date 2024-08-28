@@ -123,4 +123,26 @@ func (h *Handler) UpdateTask(c *gin.Context) {
 	c.JSON(http.StatusOK, task)
 }
 
-func (h *Handler) DeleteTask(c *gin.Context) {}
+func (h *Handler) DeleteTask(c *gin.Context) {
+	idParam := c.Param("id")
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, Error{Message: BadRequestTitle})
+		return
+	}
+
+	err = h.services.IToDoService.DeleteTask(id)
+	if err != nil {
+		log.Println("Handler. DeleteTask:", err)
+		switch {
+		case errors.Is(err, storage.TaskNotFound):
+			c.JSON(http.StatusNotFound, Error{Message: err.Error()})
+			return
+		default:
+			c.JSON(http.StatusInternalServerError, Error{Message: IternalServerErrorTitle})
+			return
+		}
+	}
+
+	c.JSON(http.StatusNoContent, nil)
+}

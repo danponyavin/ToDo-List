@@ -14,6 +14,7 @@ type TodoStorage interface {
 	GetAll() ([]models.Task, error)
 	GetById(id int) (models.Task, error)
 	UpdateTask(id int, inp models.CreateTaskReq) (models.Task, error)
+	DeleteTask(id int) error
 }
 
 func (p *PostgresStorage) Create(inp models.CreateTaskReq) (models.Task, error) {
@@ -65,4 +66,17 @@ func (p *PostgresStorage) UpdateTask(id int, inp models.CreateTaskReq) (models.T
 	}
 
 	return task, nil
+}
+
+func (p *PostgresStorage) DeleteTask(id int) error {
+	res, err := p.db.Exec("DELETE FROM todo_items WHERE id = $1", id)
+	if err != nil {
+		return err
+	}
+
+	if rows, _ := res.RowsAffected(); rows == 0 {
+		return TaskNotFound
+	}
+
+	return nil
 }
