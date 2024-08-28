@@ -7,6 +7,8 @@ import (
 
 type IToDoService interface {
 	CreateTask(inp models.CreateTaskReq) (models.Task, error)
+	GetAllTasks() ([]models.Task, error)
+	GetTask(id int) (models.Task, error)
 }
 
 type Services struct {
