@@ -1,0 +1,180 @@
+definitions:
+  ToDo-List_pkg_models.CreateTaskReq:
+    properties:
+      description:
+        type: string
+      due_date:
+        type: string
+      title:
+        type: string
+    required:
+    - description
+    - due_date
+    - title
+    type: object
+  ToDo-List_pkg_models.Task:
+    properties:
+      created_at:
+        type: string
+      description:
+        type: string
+      due_date:
+        type: string
+      id:
+        type: integer
+      title:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  pkg_handler.Error:
+    properties:
+      message:
+        type: string
+    type: object
+info:
+  contact: {}
+  title: ToDo-List Service API
+paths:
+  /tasks:
+    get:
+      consumes:
+      - application/json
+      description: Получение списка всех задач
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/ToDo-List_pkg_models.Task'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/pkg_handler.Error'
+      summary: Получение списка всех задач
+    post:
+      consumes:
+      - application/json
+      description: Создание новой задачи
+      parameters:
+      - description: Входные параметры
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/ToDo-List_pkg_models.CreateTaskReq'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/ToDo-List_pkg_models.Task'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/pkg_handler.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/pkg_handler.Error'
+      summary: Создание новой задачи
+  /tasks/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Удаление задачи
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/pkg_handler.Error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/pkg_handler.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/pkg_handler.Error'
+      summary: Удаление задачи
+    get:
+      consumes:
+      - application/json
+      description: Получение задачи по ID
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ToDo-List_pkg_models.Task'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/pkg_handler.Error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/pkg_handler.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/pkg_handler.Error'
+      summary: Получение задачи по ID
+    put:
+      consumes:
+      - application/json
+      description: Обновление задачи
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Входные параметры
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/ToDo-List_pkg_models.CreateTaskReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ToDo-List_pkg_models.Task'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/pkg_handler.Error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/pkg_handler.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/pkg_handler.Error'
+      summary: Обновление задачи
+swagger: "2.0"

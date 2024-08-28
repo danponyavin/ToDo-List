@@ -8,6 +8,8 @@ import (
 	"log"
 )
 
+// @title ToDo-List Service API
+// main godoc
 func main() {
 	rep := storage.NewPostgresStorage()
 	services := service.NewServices(rep)
