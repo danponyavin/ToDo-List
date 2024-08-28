@@ -91,9 +91,36 @@ func (h *Handler) GetTaskByID(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, task)
-
 }
 
-func (h *Handler) UpdateTask(c *gin.Context) {}
+func (h *Handler) UpdateTask(c *gin.Context) {
+	idParam := c.Param("id")
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, Error{Message: BadRequestTitle})
+		return
+	}
+
+	var req models.CreateTaskReq
+	if err = c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, Error{Message: BadRequestTitle})
+		return
+	}
+
+	task, err := h.services.IToDoService.UpdateTask(id, req)
+	if err != nil {
+		log.Println("Handler. UpdateTask:", err)
+		switch {
+		case errors.Is(err, storage.TaskNotFound):
+			c.JSON(http.StatusNotFound, Error{Message: err.Error()})
+			return
+		default:
+			c.JSON(http.StatusInternalServerError, Error{Message: IternalServerErrorTitle})
+			return
+		}
+	}
+
+	c.JSON(http.StatusOK, task)
+}
 
 func (h *Handler) DeleteTask(c *gin.Context) {}
