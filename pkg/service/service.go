@@ -1,8 +1,12 @@
 package service
 
-import "ToDo-List/pkg/storage"
+import (
+	"ToDo-List/pkg/models"
+	"ToDo-List/pkg/storage"
+)
 
 type IToDoService interface {
+	CreateTask(inp models.CreateTaskReq) (models.Task, error)
 }
 
 type Services struct {
